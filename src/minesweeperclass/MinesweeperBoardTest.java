@@ -306,7 +306,7 @@ public class MinesweeperBoardTest {
 		char[][] testBoard = new char[5][5];
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
-				if (j % 3 == 0) {
+				if (j == 3) {
 					testBoard[i][j] = 'B';
 				} else
 					testBoard[i][j] = '-';
@@ -320,10 +320,15 @@ public class MinesweeperBoardTest {
 				expectedStringArray.set(i, expectedStringArray.get(i) + "- ");
 			}
 		}
-		
+
 		List<String> boardRep = board.dig(0, 0);
-		for (int i = 0; i < 5; i++){
-			expectedStringArray.set(i, "  - - - - ");
+		for (int i = 0; i < 5; i++) {
+			if (i % 4 == 0) {
+				expectedStringArray.set(i, "    2 - - ");
+			} else{
+				expectedStringArray.set(i, "    3 - - ");
+			}
 		}
+		assertTrue(boardRep.equals(expectedStringArray));
 	}
 }

@@ -94,6 +94,7 @@ public class MinesweeperBoard {
 	}
 
 	private void setDug(int x, int y) {
+		Board[y][x] = DUG;
 		if (getBombNeighbors(x, y).equals(" ")) {
 			for (int i = -1; i < 2; i++) {
 				for (int j = -1; j < 2; j++) {
@@ -103,7 +104,6 @@ public class MinesweeperBoard {
 				}
 			}
 		}
-		Board[y][x] = DUG;
 	}
 
 	private List<String> getBoard() {
