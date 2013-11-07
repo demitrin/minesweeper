@@ -15,7 +15,7 @@ public class MinesweeperBoardTest {
 	 * 
 	 * Testing space: constructor(), constructor(int size), constructor(char[][]
 	 * board), flag(x,y), deFlag(x,y), dig(x,y), recursive chaining from
-	 * dig(x,y), look(), checkRep()
+	 * dig(x,y)
 	 */
 
 	/*
@@ -150,22 +150,15 @@ public class MinesweeperBoardTest {
 					testBoard[i][j] = '-';
 			}
 		}
-		// construct expected List<String>
 		MinesweeperBoard board = new MinesweeperBoard(testBoard);
-		List<String> expectedStringArray = new ArrayList<String>();
-		for (int i = 0; i < 5; i++) {
-			expectedStringArray.add("");
-			for (int j = 0; j < 5; j++) {
-				expectedStringArray.set(i, expectedStringArray.get(i) + "- ");
-			}
-		}
 		// incorrect grid positions
+		List<String> boardRep = board.look();
 		board.flag(-1, 0);
 		board.flag(0, -1);
 		board.flag(6, 4);
-		board.flag(4, 6);
+		List<String> newBoardRep = board.flag(4, 6);
 		// check that nothing was set to FLAGGED
-		assertTrue(board.look().equals(expectedStringArray));
+		assertTrue(boardRep.equals(newBoardRep));
 		assertTrue(board.checkRep());
 	}
 
@@ -183,24 +176,19 @@ public class MinesweeperBoardTest {
 					testBoard[i][j] = '-';
 			}
 		}
-		// construct expected List<String>
 		MinesweeperBoard board = new MinesweeperBoard(testBoard);
-		List<String> expectedStringArray = new ArrayList<String>();
-		for (int i = 0; i < 5; i++) {
-			expectedStringArray.add("");
-			for (int j = 0; j < 5; j++) {
-				expectedStringArray.set(i, expectedStringArray.get(i) + "- ");
-			}
-		}
+
 		// insert a flag and deflag it. check that there are no flags on the
 		// board
+		List<String> boardRep = board.look();
 		board.flag(0, 0);
-		List<String> boardRep = board.deFlag(0, 0);
-		assertTrue(boardRep.equals(expectedStringArray));
+		List<String> newBoardRep = board.deFlag(0, 0);
+		assertTrue(boardRep.equals(newBoardRep));
 		assertTrue(board.checkRep());
 
 		// insert lots of flags and deflag them. check that there are no flags
 		// on the board
+		boardRep = board.look();
 		board.flag(0, 0);
 		board.flag(1, 2);
 		board.flag(3, 2);
@@ -208,8 +196,8 @@ public class MinesweeperBoardTest {
 		board.deFlag(3, 2);
 		board.deFlag(1, 2);
 		board.deFlag(4, 3);
-		boardRep = board.deFlag(0, 0);
-		assertTrue(boardRep.equals(expectedStringArray));
+		newBoardRep = board.deFlag(0, 0);
+		assertTrue(boardRep.equals(newBoardRep));
 		assertTrue(board.checkRep());
 
 	}
@@ -229,31 +217,26 @@ public class MinesweeperBoardTest {
 			}
 		}
 		MinesweeperBoard board = new MinesweeperBoard(testBoard);
-		List<String> expectedStringArray = new ArrayList<String>();
-		for (int i = 0; i < 5; i++) {
-			expectedStringArray.add("");
-			for (int j = 0; j < 5; j++) {
-				expectedStringArray.set(i, expectedStringArray.get(i) + "- ");
-			}
-		}
+
 		// test on untouched (x,y)
-		List<String> boardRep = board.deFlag(2, 2);
-		assertTrue(boardRep.equals(expectedStringArray));
+		List<String> boardRep = board.look();
+		List<String> newBoardRep = board.deFlag(2, 2);
+		assertTrue(boardRep.equals(newBoardRep));
 		assertTrue(board.checkRep());
 
 		// test outside of bounds
+		boardRep = board.look();
 		board.deFlag(-1, 0);
 		board.deFlag(0, -1);
 		board.deFlag(6, 3);
-		boardRep = board.deFlag(3, 6);
-		assertTrue(boardRep.equals(expectedStringArray));
+		newBoardRep = board.deFlag(3, 6);
+		assertTrue(boardRep.equals(newBoardRep));
 		assertTrue(board.checkRep());
 
 		// test on exposed (x,y)
-		board.dig(0, 0);
-		expectedStringArray.set(0, "2 - - - - ");
-		boardRep = board.deFlag(0, 0);
-		assertTrue(boardRep.equals(expectedStringArray));
+		boardRep = board.dig(0, 0);
+		newBoardRep = board.deFlag(0, 0);
+		assertTrue(boardRep.equals(newBoardRep));
 		assertTrue(board.checkRep());
 	}
 
@@ -320,15 +303,53 @@ public class MinesweeperBoardTest {
 				expectedStringArray.set(i, expectedStringArray.get(i) + "- ");
 			}
 		}
-
+		// dig(0,0), will proliferate to all neighbor spots
 		List<String> boardRep = board.dig(0, 0);
+
+		// create expected array
 		for (int i = 0; i < 5; i++) {
 			if (i % 4 == 0) {
 				expectedStringArray.set(i, "    2 - - ");
-			} else{
+			} else {
 				expectedStringArray.set(i, "    3 - - ");
 			}
 		}
 		assertTrue(boardRep.equals(expectedStringArray));
+	}
+
+	@Test
+	public void testDigInvalidInputs() {
+		// test dig(x,y) for inputs that are not in range, inputs that are
+		// already exposed, or inputs that are flagged
+
+		// construct testBoard
+		char[][] testBoard = new char[5][5];
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				if (j % 2 == 1) {
+					testBoard[i][j] = 'B';
+				} else
+					testBoard[i][j] = '-';
+			}
+		}
+		MinesweeperBoard board = new MinesweeperBoard(testBoard);
+
+		// check dig(x,y) for x,y outside of grid
+		List<String> boardRep = board.look();
+		board.dig(0, -1);
+		board.dig(6, 3);
+		board.dig(3, 6);
+		List<String> newBoardRep = board.dig(-1, 0);
+		assertTrue(boardRep.equals(newBoardRep));
+
+		// check dig(x,y) for flagged spots
+		boardRep = board.flag(0, 0);
+		newBoardRep = board.dig(0, 0);
+		assertTrue(boardRep.equals(newBoardRep));
+
+		// check dig(x,y) for spots that have already been dug
+		boardRep = board.dig(0, 1);
+		newBoardRep = board.dig(0, 1);
+		assertTrue(boardRep.equals(newBoardRep));
 	}
 }
