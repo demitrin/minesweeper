@@ -285,25 +285,45 @@ public class MinesweeperBoardTest {
 				expectedStringArray.set(i, expectedStringArray.get(i) + "- ");
 			}
 		}
-		/*
-		 * current board: allow B to represent an untouched bomb
-		 * 
-		 * 					- B - B -
-		 * 					- B - B -
-		 * 					- B - B -
-		 * 					- B - B -
-		 * 					- B - B -
-		 */
-		
+
 		// dig(x,y) on non-bomb
 		board.dig(0, 0);
 		List<String> boardRep = board.dig(0, 1);
 		expectedStringArray.set(0, "2 - - - - ");
 		expectedStringArray.set(1, "3 - - - - ");
 		assertTrue(boardRep.equals(expectedStringArray));
-		
+
 		// dig(x,y) on a bomb, check that we get a null board
-		boardRep = board.dig(1,0);
+		boardRep = board.dig(1, 0);
 		assertTrue(boardRep == null);
+	}
+
+	@Test
+	public void testDigRecursion() {
+		// test dig recursion on a correct input with neighbors that will be dug
+
+		// construct testBoard
+		char[][] testBoard = new char[5][5];
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				if (j % 3 == 0) {
+					testBoard[i][j] = 'B';
+				} else
+					testBoard[i][j] = '-';
+			}
+		}
+		MinesweeperBoard board = new MinesweeperBoard(testBoard);
+		List<String> expectedStringArray = new ArrayList<String>();
+		for (int i = 0; i < 5; i++) {
+			expectedStringArray.add("");
+			for (int j = 0; j < 5; j++) {
+				expectedStringArray.set(i, expectedStringArray.get(i) + "- ");
+			}
+		}
+		
+		List<String> boardRep = board.dig(0, 0);
+		for (int i = 0; i < 5; i++){
+			expectedStringArray.set(i, "  - - - - ");
+		}
 	}
 }
