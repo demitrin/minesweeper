@@ -256,4 +256,54 @@ public class MinesweeperBoardTest {
 		assertTrue(boardRep.equals(expectedStringArray));
 		assertTrue(board.checkRep());
 	}
+
+	/*
+	 * the following tests will test dig(x,y) inputs: (x,y) on grid that are
+	 * either safe, bombs, flagged, or already explored, and (x,y) not on grid
+	 */
+
+	@Test
+	public void testDigUntouched() {
+		// test dig(x,y) on untouched spots, both bombs and empty
+		// not checking for proliferation of untouched neighbors
+
+		// construct testBoard
+		char[][] testBoard = new char[5][5];
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				if (j % 2 == 1) {
+					testBoard[i][j] = 'B';
+				} else
+					testBoard[i][j] = '-';
+			}
+		}
+		MinesweeperBoard board = new MinesweeperBoard(testBoard);
+		List<String> expectedStringArray = new ArrayList<String>();
+		for (int i = 0; i < 5; i++) {
+			expectedStringArray.add("");
+			for (int j = 0; j < 5; j++) {
+				expectedStringArray.set(i, expectedStringArray.get(i) + "- ");
+			}
+		}
+		/*
+		 * current board: allow B to represent an untouched bomb
+		 * 
+		 * 					- B - B -
+		 * 					- B - B -
+		 * 					- B - B -
+		 * 					- B - B -
+		 * 					- B - B -
+		 */
+		
+		// dig(x,y) on non-bomb
+		board.dig(0, 0);
+		List<String> boardRep = board.dig(0, 1);
+		expectedStringArray.set(0, "2 - - - - ");
+		expectedStringArray.set(1, "3 - - - - ");
+		assertTrue(boardRep.equals(expectedStringArray));
+		
+		// dig(x,y) on a bomb, check that we get a null board
+		boardRep = board.dig(1,0);
+		assertTrue(boardRep == null);
+	}
 }
