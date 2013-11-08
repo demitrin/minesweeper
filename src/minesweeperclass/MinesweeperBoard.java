@@ -13,6 +13,25 @@ public class MinesweeperBoard {
 	private final int size;
 	private int players = 0;
 
+	/**
+	 * MinesweeperBoard constructs with the board representation for the
+	 * multiplayer game. Whenever a player makes a request, digging, flagging,
+	 * deflagging, looking, etc, the board state will be modified appropriate
+	 * within MinesweeperBoard.
+	 * 
+	 * Threadsafe: The MinesweeperBoard is threadsafe because every public
+	 * method is synchronized to the board. Public methods are accessible
+	 * through player commands. All private methods are not synchronized.
+	 * Because no public methods call other public methods, the board will never
+	 * deadlock.
+	 * 
+	 * R.I. : Every square on the board will always be in a valid minesweeper
+	 * state.
+	 * 
+	 * @param size
+	 * @throws IllegalArgumentException
+	 */
+
 	public MinesweeperBoard(int size) throws IllegalArgumentException {
 		if (size < 1) {
 			throw new IllegalArgumentException(
@@ -59,11 +78,11 @@ public class MinesweeperBoard {
 		return true;
 	}
 
-	public void addPlayer() {
+	public synchronized void addPlayer() {
 		players += 1;
 	}
 
-	public int getNumberOfPlayers() {
+	public synchronized int getNumberOfPlayers() {
 		return players;
 	}
 
