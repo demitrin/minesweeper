@@ -11,6 +11,7 @@ public class MinesweeperBoard {
 	private final char FLAGGED = 'F';
 	private final char FLAGGED_BOMB = 'C';
 	private final int size;
+	private int players = 0;
 
 	public MinesweeperBoard(int size) throws IllegalArgumentException {
 		if (size < 1) {
@@ -56,6 +57,14 @@ public class MinesweeperBoard {
 			}
 		}
 		return true;
+	}
+	
+	public void addPlayer(){
+		players+=1;
+	}
+	
+	public int getNumberOfPlayers(){
+		return players;
 	}
 
 	private boolean isType(int x, int y, char type) {

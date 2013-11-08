@@ -74,14 +74,21 @@ public class MinesweeperServer {
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				socket.getInputStream()));
 		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-
+		board.addPlayer();
+		out.println("Welcome to Minesweeper. " + board.getNumberOfPlayers()
+				+ " people are playing including you. Type 'help' for help.");
 		try {
 			for (String line = in.readLine(); line != null; line = in
 					.readLine()) {
 				String output = handleRequest(line);
-				if (output != null) {
+				if (output == "bye") {
+					socket.close();
+					in.close();
+					out.close();
+				} else if (output != null) {
 					out.println(output);
 				} else if (debug) {
+					out.println("BOOM!\n");
 					socket.close();
 					in.close();
 					out.close();
@@ -96,10 +103,8 @@ public class MinesweeperServer {
 	private String createPrintableBoard(List<String> lines) {
 		String str = "";
 		for (int i = 0; i < lines.size(); i++) {
-			if (i != 0) {
-				str += "\n";
-			}
 			str += lines.get(i);
+			str += "\n";
 		}
 		return str;
 	}
@@ -114,7 +119,7 @@ public class MinesweeperServer {
 		} else if (request.equals("deflag")) {
 			return createPrintableBoard(board.deFlag(x, y));
 		} else if (request.equals("bye")) {
-			return null;
+			return "bye";
 		} else {
 			return "Sorry! You won't get any help from me.";
 		}
