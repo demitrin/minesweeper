@@ -82,25 +82,27 @@ public class MinesweeperServer {
 					.readLine()) {
 				String output = handleRequest(line);
 				if (output == "bye") {
-					socket.close();
-					in.close();
-					out.close();
+					break;
 				} else if (output != null) {
 					out.println(output);
-				} else if (debug) {
+				} else if (!debug) {
 					out.println("BOOM!\n");
-					socket.close();
-					in.close();
-					out.close();
+					break;
+				} else {
+					out.println("BOOM!\n");
 				}
 			}
 		} finally {
 			out.close();
 			in.close();
+			socket.close();
 		}
 	}
 
 	private String createPrintableBoard(List<String> lines) {
+		if (lines == null) {
+			return null;
+		}
 		String str = "";
 		for (int i = 0; i < lines.size(); i++) {
 			str += lines.get(i);
@@ -310,7 +312,9 @@ public class MinesweeperServer {
 				}
 			}
 			text = reader.readLine();
-			textArray = text.split(" ");
+			if (text != null) {
+				textArray = text.split(" ");
+			}
 			i++;
 		}
 		reader.close();

@@ -58,12 +58,12 @@ public class MinesweeperBoard {
 		}
 		return true;
 	}
-	
-	public void addPlayer(){
-		players+=1;
+
+	public void addPlayer() {
+		players += 1;
 	}
-	
-	public int getNumberOfPlayers(){
+
+	public int getNumberOfPlayers() {
 		return players;
 	}
 
