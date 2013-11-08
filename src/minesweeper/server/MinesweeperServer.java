@@ -98,7 +98,7 @@ public class MinesweeperServer {
 				} else if (output != null) {
 					out.println(output);
 				} else {
-					out.println("That wasn't a correct command!");
+					out.println("That wasn't a correct command! Type 'help' for a list of commands.");
 				}
 			}
 		} finally {
@@ -126,9 +126,10 @@ public class MinesweeperServer {
 			return createPrintableBoard(board.look());
 		} else if (request.equals("dig")) {
 			String output = createPrintableBoard(board.dig(x, y));
-			if (output != null){
+			if (output != null) {
 				return output;
-			} return "boom!";
+			}
+			return "boom!";
 		} else if (request.equals("flag")) {
 			return createPrintableBoard(board.flag(x, y));
 		} else if (request.equals("deflag")) {
@@ -136,7 +137,7 @@ public class MinesweeperServer {
 		} else if (request.equals("bye")) {
 			return "bye";
 		} else {
-			return "Sorry! You won't get any help from me.";
+			return "Valid commands: 'look', 'dig x y', 'flag x y', 'deflag x y', 'bye', 'help'";
 		}
 	}
 
