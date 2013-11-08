@@ -78,6 +78,10 @@ public class MinesweeperBoard {
 		return true;
 	}
 
+	public synchronized void removePlayer() {
+		players -= 1;
+	}
+
 	public synchronized void addPlayer() {
 		players += 1;
 	}

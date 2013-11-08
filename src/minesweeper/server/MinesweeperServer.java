@@ -100,6 +100,7 @@ public class MinesweeperServer {
 				}
 			}
 		} finally {
+			board.removePlayer();
 			out.close();
 			in.close();
 			socket.close();
