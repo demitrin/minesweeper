@@ -86,10 +86,10 @@ public class MinesweeperServer {
 				} else if (output != null) {
 					out.println(output);
 				} else if (!debug) {
-					out.println("BOOM!\n");
+					out.println("BOOM!\r\n");
 					break;
 				} else {
-					out.println("BOOM!\n");
+					out.println("BOOM!\r\n");
 				}
 			}
 		} finally {
@@ -106,7 +106,7 @@ public class MinesweeperServer {
 		String str = "";
 		for (int i = 0; i < lines.size(); i++) {
 			str += lines.get(i);
-			str += "\n";
+			str += "\r\n";
 		}
 		return str;
 	}
@@ -200,7 +200,7 @@ public class MinesweeperServer {
 	 * the following grammar:
 	 * 
 	 * FILE :== LINE+ LINE :== (VAL SPACE)* VAL NEWLINE VAL :== 0 | 1 SPACE :==
-	 * " " NEWLINE :== "\r?\n"
+	 * " " NEWLINE :== "\r?\r\n"
 	 * 
 	 * If neither FILE nor SIZE is given, generate a random board of size 10x10.
 	 * 
