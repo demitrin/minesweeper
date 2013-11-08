@@ -156,8 +156,10 @@ public class MinesweeperBoard {
 	}
 
 	public synchronized List<String> flag(int x, int y) {
-		if (isType(x, y, BOMB, UNTOUCHED)) {
+		if (isType(x, y, UNTOUCHED)) {
 			Board[y][x] = FLAGGED;
+		} else if (isType(x, y, BOMB)) {
+			Board[y][x] = FLAGGED_BOMB;
 		}
 		return getBoard();
 	}
@@ -165,6 +167,8 @@ public class MinesweeperBoard {
 	public synchronized List<String> deFlag(int x, int y) {
 		if (isType(x, y, FLAGGED)) {
 			Board[y][x] = UNTOUCHED;
+		} else if (isType(x, y, FLAGGED_BOMB)) {
+			Board[y][x] = BOMB;
 		}
 		return getBoard();
 	}
