@@ -20,6 +20,13 @@ public class MinesweeperServer {
 	 * @param port
 	 *            port number, requires 0 <= port <= 65535
 	 */
+
+	/**
+	 * Threadsafe argument: Because every client will be kept in their own
+	 * thread while sending requests to a single board, if the board is
+	 * threadsafe then the server is threadsafe. The board is threadsafe,
+	 * therefore the server is also threadsafe
+	 */
 	public MinesweeperServer(int port, boolean debug, MinesweeperBoard board)
 			throws IOException {
 		serverSocket = new ServerSocket(port);
