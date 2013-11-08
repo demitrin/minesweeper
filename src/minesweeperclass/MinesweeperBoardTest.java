@@ -13,22 +13,14 @@ public class MinesweeperBoardTest {
 	 * Test each public method, testing valid grid inputs and invalid grid
 	 * inputs
 	 * 
-	 * Testing space: constructor(), constructor(int size), constructor(char[][]
-	 * board), flag(x,y), deFlag(x,y), dig(x,y), recursive chaining from
-	 * dig(x,y)
+	 * Testing space: constructor(int size), constructor(char[][] board),
+	 * flag(x,y), deFlag(x,y), dig(x,y), recursive chaining from dig(x,y)
 	 */
 
 	/*
 	 * The following tests will test the constructors with valid and invalid
 	 * inputs. If the input is invalid, test for IllegalArgumentException
 	 */
-	@Test
-	public void testDefaultConstructor() {
-		// default constructor test
-		MinesweeperBoard board = new MinesweeperBoard();
-		assertTrue(board.look().size() == 10);
-		assertTrue(board.checkRep());
-	}
 
 	@Test
 	public void testSizeConstructor() {
@@ -63,7 +55,11 @@ public class MinesweeperBoardTest {
 		for (int i = 0; i < 5; i++) {
 			expectedStringArray.add("");
 			for (int j = 0; j < 5; j++) {
-				expectedStringArray.set(i, expectedStringArray.get(i) + "- ");
+				if (j != 0) {
+					expectedStringArray
+							.set(i, expectedStringArray.get(i) + " ");
+				}
+				expectedStringArray.set(i, expectedStringArray.get(i) + "-");
 			}
 		}
 		// compare look() to the expected List<String>
@@ -103,18 +99,22 @@ public class MinesweeperBoardTest {
 		for (int i = 0; i < 5; i++) {
 			expectedStringArray.add("");
 			for (int j = 0; j < 5; j++) {
-				expectedStringArray.set(i, expectedStringArray.get(i) + "- ");
+				if (j != 0) {
+					expectedStringArray
+							.set(i, expectedStringArray.get(i) + " ");
+				}
+				expectedStringArray.set(i, expectedStringArray.get(i) + "-");
 			}
 		}
 		// flag 2,2
 		List<String> boardRep = board.flag(2, 2);
-		expectedStringArray.set(2, "- - F - - ");
+		expectedStringArray.set(2, "- - F - -");
 		assertTrue(boardRep.equals(expectedStringArray));
 		assertTrue(board.checkRep());
 
 		// now with the same board, flag 3,2
 		boardRep = board.flag(3, 2);
-		expectedStringArray.set(2, "- - F F - ");
+		expectedStringArray.set(2, "- - F F -");
 		assertTrue(boardRep.equals(expectedStringArray));
 		assertTrue(board.checkRep());
 
@@ -123,12 +123,12 @@ public class MinesweeperBoardTest {
 		boardRep = board.flag(0, 0);
 		for (int i = 0; i < 5; i++) {
 			if (i == 0) {
-				expectedStringArray.set(i, "2 - - - - ");
+				expectedStringArray.set(i, "2 - - - -");
 			} else if (i == 2) {
-				expectedStringArray.set(i, "- - F F - ");
+				expectedStringArray.set(i, "- - F F -");
 
 			} else {
-				expectedStringArray.set(i, "- - - - - ");
+				expectedStringArray.set(i, "- - - - -");
 			}
 		}
 		// check that it did not mark the exposed spot as FLAGGED
@@ -265,15 +265,19 @@ public class MinesweeperBoardTest {
 		for (int i = 0; i < 5; i++) {
 			expectedStringArray.add("");
 			for (int j = 0; j < 5; j++) {
-				expectedStringArray.set(i, expectedStringArray.get(i) + "- ");
+				if (j != 0) {
+					expectedStringArray
+							.set(i, expectedStringArray.get(i) + " ");
+				}
+				expectedStringArray.set(i, expectedStringArray.get(i) + "-");
 			}
 		}
 
 		// dig(x,y) on non-bomb
 		board.dig(0, 0);
 		List<String> boardRep = board.dig(0, 1);
-		expectedStringArray.set(0, "2 - - - - ");
-		expectedStringArray.set(1, "3 - - - - ");
+		expectedStringArray.set(0, "2 - - - -");
+		expectedStringArray.set(1, "3 - - - -");
 		assertTrue(boardRep.equals(expectedStringArray));
 
 		// dig(x,y) on a bomb, check that we get a null board
@@ -309,9 +313,9 @@ public class MinesweeperBoardTest {
 		// create expected array
 		for (int i = 0; i < 5; i++) {
 			if (i % 4 == 0) {
-				expectedStringArray.set(i, "    2 - - ");
+				expectedStringArray.set(i, "    2 - -");
 			} else {
-				expectedStringArray.set(i, "    3 - - ");
+				expectedStringArray.set(i, "    3 - -");
 			}
 		}
 		assertTrue(boardRep.equals(expectedStringArray));

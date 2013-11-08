@@ -4,12 +4,15 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import minesweeperclass.MinesweeperBoard;
+
 public class MinesweeperServer {
 	private final ServerSocket serverSocket;
 	/**
 	 * True if the server should _not_ disconnect a client after a BOOM message.
 	 */
 	private final boolean debug;
+	private final MinesweeperBoard board;
 
 	/**
 	 * Make a MinesweeperServer that listens for connections on port.
@@ -17,9 +20,11 @@ public class MinesweeperServer {
 	 * @param port
 	 *            port number, requires 0 <= port <= 65535
 	 */
-	public MinesweeperServer(int port, boolean debug) throws IOException {
+	public MinesweeperServer(int port, boolean debug, MinesweeperBoard board)
+			throws IOException {
 		serverSocket = new ServerSocket(port);
 		this.debug = debug;
+		this.board = board;
 	}
 
 	/**
@@ -76,12 +81,47 @@ public class MinesweeperServer {
 				String output = handleRequest(line);
 				if (output != null) {
 					out.println(output);
+				} else if (debug) {
+					socket.close();
+					in.close();
+					out.close();
 				}
 			}
 		} finally {
 			out.close();
 			in.close();
 		}
+	}
+
+	private String createPrintableBoard(List<String> lines) {
+		String str = "";
+		for (int i = 0; i < lines.size(); i++) {
+			if (i != 0) {
+				str += "\n";
+			}
+			str += lines.get(i);
+		}
+		return str;
+	}
+
+	private String handleRequestHelper(String request, int x, int y) {
+		if (request.equals("look")) {
+			return createPrintableBoard(board.look());
+		} else if (request.equals("dig")) {
+			return createPrintableBoard(board.dig(x, y));
+		} else if (request.equals("flag")) {
+			return createPrintableBoard(board.flag(x, y));
+		} else if (request.equals("deflag")) {
+			return createPrintableBoard(board.deFlag(x, y));
+		} else if (request.equals("bye")) {
+			return null;
+		} else {
+			return "Sorry! You won't get any help from me.";
+		}
+	}
+
+	private String handleRequestHelper(String request) {
+		return handleRequestHelper(request, 0, 0);
 	}
 
 	/**
@@ -101,26 +141,21 @@ public class MinesweeperServer {
 		}
 		String[] tokens = input.split(" ");
 		if (tokens[0].equals("look")) {
-			// 'look' request
-			// TODO Question 5
+			return handleRequestHelper("look");
 		} else if (tokens[0].equals("help")) {
-			// 'help' request
-			// TODO Question 5
+			return handleRequestHelper("help");
 		} else if (tokens[0].equals("bye")) {
-			// 'bye' request
-			// TODO Question 5
+			return handleRequestHelper("bye");
 		} else {
 			int x = Integer.parseInt(tokens[1]);
 			int y = Integer.parseInt(tokens[2]);
 			if (tokens[0].equals("dig")) {
-				// 'dig x y' request
-				// TODO Question 5
+				return handleRequestHelper("dig", x, y);
 			} else if (tokens[0].equals("flag")) {
-				// 'flag x y' request
-				// TODO Question 5
+				return handleRequestHelper("flag", x, y);
 			} else if (tokens[0].equals("deflag")) {
-				// 'deflag x y' request
-				// TODO Question 5
+				return handleRequestHelper("deflag", x, y);
+
 			}
 		}
 		// Should never get here--make sure to return in each of the valid cases
@@ -229,7 +264,7 @@ public class MinesweeperServer {
 	 * 
 	 * @param debug
 	 *            The server should disconnect a client after a BOOM message if
-	 *            and only if this argument is false.	
+	 *            and only if this argument is false.
 	 * @param size
 	 *            If this argument is not null, start with a random board of
 	 *            size size * size.
@@ -243,9 +278,38 @@ public class MinesweeperServer {
 	public static void runMinesweeperServer(boolean debug, File file,
 			Integer size, int port) throws IOException {
 
-		// TODO: Continue your implementation here.
-
-		MinesweeperServer server = new MinesweeperServer(port, debug);
+		MinesweeperBoard newBoard;
+		if (size != null) {
+			newBoard = new MinesweeperBoard(size);
+		} else {
+			newBoard = MinesweeperServer.getBoardFromFile(file);
+		}
+		MinesweeperServer server = new MinesweeperServer(port, debug, newBoard);
 		server.serve();
+	}
+
+	private static MinesweeperBoard getBoardFromFile(File file)
+			throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+
+		String text = reader.readLine();
+		String[] textArray = text.split(" ");
+		char[][] inputBoard = new char[textArray.length][textArray.length];
+		int i = 0;
+		while (text != null) {
+			for (int j = 0; j < textArray.length; j++) {
+				if (textArray[j].equals("0")) {
+					inputBoard[i][j] = '-';
+				} else if (textArray[j].equals("1")) {
+					inputBoard[i][j] = 'B';
+				}
+			}
+			text = reader.readLine();
+			textArray = text.split(" ");
+			i++;
+		}
+		reader.close();
+
+		return new MinesweeperBoard(inputBoard);
 	}
 }

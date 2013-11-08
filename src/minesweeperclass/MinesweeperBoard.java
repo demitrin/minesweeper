@@ -45,14 +45,6 @@ public class MinesweeperBoard {
 		}
 	}
 
-	public MinesweeperBoard() {
-		this(10);
-	}
-
-	public int getSize() {
-		return size;
-	}
-
 	public boolean checkRep() {
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
@@ -111,13 +103,16 @@ public class MinesweeperBoard {
 		for (int i = 0; i < size; i++) {
 			boardStrings.add("");
 			for (int j = 0; j < size; j++) {
+				if (j != 0) {
+					boardStrings.set(i, boardStrings.get(i) + " ");
+				}
 				if (isType(j, i, DUG)) {
 					boardStrings.set(i,
-							boardStrings.get(i) + getBombNeighbors(j, i) + " ");
+							boardStrings.get(i) + getBombNeighbors(j, i));
 				} else if (isType(j, i, FLAGGED, FLAGGED_BOMB)) {
-					boardStrings.set(i, boardStrings.get(i) + "F" + " ");
+					boardStrings.set(i, boardStrings.get(i) + "F");
 				} else if (isType(j, i, UNTOUCHED, BOMB)) {
-					boardStrings.set(i, boardStrings.get(i) + "-" + " ");
+					boardStrings.set(i, boardStrings.get(i) + "-");
 				} else {
 					throw new RuntimeException(
 							"There was an undefined type in the MinesweeperBoard");
@@ -146,7 +141,7 @@ public class MinesweeperBoard {
 		if (isType(x, y, UNTOUCHED)) {
 			setDug(x, y);
 		} else if (isType(x, y, BOMB)) {
-			Board[y][x] = DUG;
+			setDug(x, y);
 			// indicates socket should be closed
 			return null;
 		}
