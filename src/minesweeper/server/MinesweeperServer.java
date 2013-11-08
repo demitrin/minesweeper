@@ -90,13 +90,15 @@ public class MinesweeperServer {
 				String output = handleRequest(line);
 				if (output == "bye") {
 					break;
+				} else if (output == "boom!") {
+					out.println("BOOM!\r\n");
+					if (!debug) {
+						break;
+					}
 				} else if (output != null) {
 					out.println(output);
-				} else if (!debug) {
-					out.println("BOOM!\r\n");
-					break;
 				} else {
-					out.println("BOOM!\r\n");
+					out.println("That wasn't a correct command!");
 				}
 			}
 		} finally {
@@ -123,7 +125,10 @@ public class MinesweeperServer {
 		if (request.equals("look")) {
 			return createPrintableBoard(board.look());
 		} else if (request.equals("dig")) {
-			return createPrintableBoard(board.dig(x, y));
+			String output = createPrintableBoard(board.dig(x, y));
+			if (output != null){
+				return output;
+			} return "boom!";
 		} else if (request.equals("flag")) {
 			return createPrintableBoard(board.flag(x, y));
 		} else if (request.equals("deflag")) {
