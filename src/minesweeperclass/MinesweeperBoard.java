@@ -23,13 +23,13 @@ public class MinesweeperBoard {
 	 * method is synchronized to the board. Public methods are accessible
 	 * through player commands. All private methods are not synchronized.
 	 * Because no public methods call other public methods, the board will never
-	 * deadlock.
+	 * deadlock. Additionally, every method preserves the R.I.
 	 * 
 	 * R.I. : Every square on the board will always be in a valid minesweeper
-	 * state.
+	 * state. The board will always be a square (i.e. for some N, NxN)
 	 * 
 	 * @param size
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException if given invalid grids
 	 */
 
 	public MinesweeperBoard(int size) throws IllegalArgumentException {

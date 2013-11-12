@@ -25,7 +25,7 @@ public class MinesweeperServer {
 	 * Threadsafe argument: Because every client will be kept in their own
 	 * thread while sending requests to a single board, if the board is
 	 * threadsafe then the server is threadsafe. The board is threadsafe,
-	 * therefore the server is also threadsafe
+	 * therefore the server is also threadsafe.
 	 */
 	public MinesweeperServer(int port, boolean debug, MinesweeperBoard board)
 			throws IOException {
